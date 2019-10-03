@@ -1,0 +1,5 @@
+game Mazeman created on Unity
+game data split download from github and host
+build special folder
+some secret added from project CCCA on local secured pc
+for future upgrede and rebuild
