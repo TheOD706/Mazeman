@@ -1,0 +1,6 @@
+*.meta
+mazeman/Library/*
+mazeman/Logs/*
+mazeman/obj/*
+mazeman/Packages/*
+mazeman/ProjectSettings/*
