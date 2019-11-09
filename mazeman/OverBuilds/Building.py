@@ -36,12 +36,7 @@ def oncedir(dir):
                     f2 = open(dir + "\\" + x, "w")
                     f2.write("file are parted=" + str(number_of_files) + ";")
                     f2.close()
-                    #with open("..\\Builds\\" + dir + "\\" + x) as infp:
-                    #    files = [open(dir + "\\" + x + "--" + str(i) + ".part.cs", 'w') for i in range(number_of_files)]
-                    #    for i, line in enumerate(infp):
-                    #        files[i % number_of_files].write(line)
-                    #    for f in files:
-                    #        f.close()
+                    print("splited file " + dir + "\\" + x)
         else:
             print(dir + "\\" + x + " unknown type object")
 

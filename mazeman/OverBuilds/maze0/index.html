@@ -6,10 +6,10 @@
     <title>Unity WebGL Player | mazeman</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="Build/UnityLoader.js"></script>
+    <script src="https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/TemplateData/UnityProgress.js"></script>
+    <script src="https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/Build/UnityLoader.js"></script>
     <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/maze0.json", {onProgress: UnityProgress});
+      var unityInstance = UnityLoader.instantiate("unityContainer", "https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/Build/maze0.json", {onProgress: UnityProgress});
       function resizer() {
         var uc0 = document.getElementById('unityContainer');
         uc0.style.width = (0.8 * window.innerWidth) + "px";
