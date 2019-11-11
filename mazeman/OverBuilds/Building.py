@@ -11,8 +11,26 @@ def oncedir(dir):
             if (x == "UnityLoader.js"):#add own comands to loader
                 f0 = open("..\\Builds\\" + dir + "\\" + x, "r")
                 t0 = f0.read()
-                j0 = t0.index("downloadJob: function(e, t) {")
-                j1 = t0.index("scheduleBuildDownloadJob: function(e, t, r) {", j0)
+                j0 = -1
+                try:
+                    j0 = t0.index("downloadJob: function(e, t) {")
+                except ValueError:
+                    j0 = -1
+                if j0 < 0:
+                    try:
+                        j0 = t0.index("downloadJob:function(e,t){")
+                    except ValueError:
+                        return
+                j1 = -1
+                try:
+                    j1 = t0.index("scheduleBuildDownloadJob: function(e, t, r) {", j0)
+                except ValueError:
+                    j1 = -1
+                if j1 < 0:
+                    try:
+                        j1 = t0.index("scheduleBuildDownloadJob:function(e,t,r){", j0)
+                    except ValueError:
+                        return
                 t1 = t0[j0:j1]
                 f1 = open("ULdownloadjob.js", "r")
                 t2 = f1.read()
@@ -24,14 +42,15 @@ def oncedir(dir):
                 f2.close()
             else:
                 stat0 = os.stat("..\\Builds\\" + dir + "\\" + x)
-                if (stat0.st_size < 75000000):
+                critic_size = 10000000
+                if (stat0.st_size < critic_size):
                     shutil.copy("..\\Builds\\" + dir + "\\" + x, "..\\OverBuilds\\" + dir + "\\" + x)
                 else:
-                    number_of_files = math.ceil(stat0.st_size / 75000000)
+                    number_of_files = math.ceil(stat0.st_size / critic_size)
                     f0 = open("..\\Builds\\" + dir + "\\" + x, "rb")
                     for i0 in range(number_of_files):
                         f1 = open(dir + "\\" + x + "--" + str(i0) + ".part.cs", "wb")
-                        f1.write(f0.read(75000000))
+                        f1.write(f0.read(critic_size))
                         f1.close()
                     f2 = open(dir + "\\" + x, "w")
                     f2.write("file are parted=" + str(number_of_files) + ";")

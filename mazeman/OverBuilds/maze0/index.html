@@ -6,25 +6,19 @@
     <title>Unity WebGL Player | mazeman</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/TemplateData/UnityProgress.js"></script>
-    <script src="https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/Build/UnityLoader.js"></script>
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
     <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "https://raw.githubusercontent.com/TheOD706/Mazeman/master/mazeman/OverBuilds/maze0/Build/maze0.json", {onProgress: UnityProgress});
-      function resizer() {
-        var uc0 = document.getElementById('unityContainer');
-        uc0.style.width = (0.8 * window.innerWidth) + "px";
-        uc0.style.height = (0.8 * window.innerHeight) + "px";
-      }
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/maze0.json", {onProgress: UnityProgress});
     </script>
   </head>
-  <body style="background-image: url('maze background.jpg'); background-repeat: no-repeat; background-size: cover;" onresize="resizer();">
+  <body>
     <div class="webgl-content">
       <div id="unityContainer" style="width: 960px; height: 600px"></div>
       <div class="footer">
         <div class="webgl-logo"></div>
         <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
         <div class="title">mazeman</div>
-        music from <a href='https://www.free-stock-music.com'>free-stock-music.com</a>
       </div>
     </div>
   </body>

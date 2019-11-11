@@ -1,27 +1,75 @@
 downloadJob: function(e, t) {
-    console.log(t);
-    var r = t.parameters.objParameters ? new UnityLoader.UnityCache.XMLHttpRequest(t.parameters.objParameters) : new XMLHttpRequest;
-    r.open("GET", t.parameters.url), r.responseType = "arraybuffer", r.onload = function() {
-      if(r.response.StartsWith("file are parted")){
-        var loadeddata = "";
-        var j1 = r.response.indexOf("=");
-        var j2 = r.response.indexOf(";", j1);
-        var j0 = parseInt(r.response.substring(j1, j2));
-        for(var i0 = 0; i0 < j0; i0++){
+  //console.log(t);
+  var r = t.parameters.objParameters ? new UnityLoader.UnityCache.XMLHttpRequest(t.parameters.objParameters) : new XMLHttpRequest;
+  r.open("GET", t.parameters.url), r.responseType = "arraybuffer", r.onload = function() {
+    //if(String.fromCharCode.apply(null, new Uint16Array(r.response)).startsWith("file are parted")){
+    //console.log(t.parameters.url);
+    var ui8a0 = new Uint8Array(r.response);
+    var b0 = false;
+    var fap = [102, 105, 108, 101, 32, 97, 114, 101, 32, 112, 97, 114, 116, 101, 100];
+    for(var i0 = 0; i0 < 15; i0++){
+      //console.log(ui8a0[i0]);
+      if(ui8a0[i0] != fap[i0]) break;
+      if(i0 == 14) b0 = true;
+    }
+    //console.log(new TextDecoder("utf-8").decode(r.response));
+    if(b0){
+      var floader = {
+        step: -2,
+        count: -1,
+        storeddata: new Uint8Array(0),
+        url: "",
+        action: function(fl0) {
           var xhr0 = new XMLHttpRequest();
-          xhr0.open("GET", t.parameters.url + "--" + i0 + ".part.cs");
+          xhr0.open("GET", fl0.url + "--" + fl0.step + ".part.cs");
           xhr0.responseType = "arraybuffer";
           xhr0.onload = function () {
-            loadeddata = loadeddata + xhr0.response;
+            var temp0 = new Uint8Array(xhr0.response);
+            var concat = new Uint8Array(fl0.storeddata.length + temp0.length);
+            concat.set(fl0.storeddata);
+            concat.set(temp0, fl0.storeddata.length);
+            fl0.storeddata = concat;
+            fl0.step++;
+            if(fl0.step < fl0.count) fl0.action(fl0);
+            else UnityLoader.Compression.decompress(fl0.storeddata, function(e) {t.complete(e)});
           }
-          t.parameters.onprogress && xhr0.addEventListener("progress", t.parameters.onprogress);
-          t.parameters.onload && xhr0.addEventListener("load", t.parameters.onload);
+          xhr0.addEventListener("progress", function(event) {
+            alert( 'download ' + event.loaded + ' byte of ' + event.total + '  =  ' + (100 * event.loaded / event.total) + '%');
+          });
+          xhr0.onerror = function() {
+            xhr.send();
+          }
           xhr0.send();
         }
-        UnityLoader.Compression.decompress(new Uint8Array(loadeddata), function(e) {t.complete(e)});
+      };
+      var resptext = new TextDecoder("utf-8").decode(r.response);
+      //console.log(resptext);
+      var j1 = resptext.indexOf("=");
+      var j2 = resptext.indexOf(";", j1);
+      floader.count = parseInt(resptext.substring(j1 + 1, j2));
+      floader.step = 0;
+      j1 = j2 + 1;
+      j2 = resptext.indexOf("!", j1);
+      floader.url = resptext.substring(j1, j2);
+      floader.action(floader);
+      /*for(var i0 = 0; i0 < j0; i0++){
+        var xhr0 = new XMLHttpRequest();
+        xhr0.open("GET", url0 + "--" + i0 + ".part.cs");
+        xhr0.responseType = "arraybuffer";
+        xhr0.onload = function () {
+          var temp0 = new Uint8Array(xhr0.response);
+          var concat = new Uint8Array(loadeddata.length + temp0.length);
+          concat.set(loadeddata);
+          concat.set(temp0, loadeddata.length);
+          loadeddata = concat;
+        }
+        t.parameters.onprogress && xhr0.addEventListener("progress", t.parameters.onprogress);
+        t.parameters.onload && xhr0.addEventListener("load", t.parameters.onload);
+        xhr0.send();
       }
-      else
-        UnityLoader.Compression.decompress(new Uint8Array(r.response), function(e) {t.complete(e)});
-    }, t.parameters.onprogress && r.addEventListener("progress", t.parameters.onprogress), t.parameters.onload && r.addEventListener("load", t.parameters.onload), r.send()
-  },
-  
+      UnityLoader.Compression.decompress(loadeddata, function(e) {t.complete(e)});*/
+    }
+    else
+      UnityLoader.Compression.decompress(ui8a0, function(e) {t.complete(e)});
+  }, t.parameters.onprogress && r.addEventListener("progress", t.parameters.onprogress), t.parameters.onload && r.addEventListener("load", t.parameters.onload), r.send()
+},
