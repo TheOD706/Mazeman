@@ -1,0 +1,103 @@
+downloadJob: async function(e, t) {
+    //console.log(t);
+    var downloadwaiter = {
+      waitingyet: false,
+      waittime: 400,
+      loadprogress: 0,
+      sleep: async function(ms) {
+        if(this.loadprogress < 50){
+          this.waittime *= 2;
+        }
+        else{
+          this.waittime = Math.max(400, this.waittime / 2);
+        }
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+    };
+    var r = t.parameters.objParameters ? new UnityLoader.UnityCache.XMLHttpRequest(t.parameters.objParameters) : new XMLHttpRequest;
+    r.open("GET", t.parameters.url), r.responseType = "arraybuffer", r.onload = function() {
+      //if(String.fromCharCode.apply(null, new Uint16Array(r.response)).startsWith("file are parted")){
+      //console.log(t.parameters.url);
+      var ui8a0 = new Uint8Array(r.response);
+      var b0 = false;
+      var fap = [102, 105, 108, 101, 32, 97, 114, 101, 32, 112, 97, 114, 116, 101, 100];
+      for(var i0 = 0; i0 < 15; i0++){
+        //console.log(ui8a0[i0]);
+        if(ui8a0[i0] != fap[i0]) break;
+        if(i0 == 14) b0 = true;
+      }
+      //console.log(new TextDecoder("utf-8").decode(r.response));
+      if(b0){
+        var floader = {
+          step: -2,
+          count: -1,
+          storeddata: new Uint8Array(0),
+          url: "",
+          action: function(fl0) {
+            console.log("start load part " + fl0.step + " of " + fl0.count);
+            downloadwaiter.loadprogress = 100 * fl0.step / fl0.count;
+            var xhr0 = new XMLHttpRequest();
+            xhr0.open("GET", fl0.url + "--" + fl0.step + ".part.cs");
+            xhr0.responseType = "arraybuffer";
+            xhr0.onload = function () {
+              var temp0 = new Uint8Array(xhr0.response);
+              var concat = new Uint8Array(fl0.storeddata.length + temp0.length);
+              concat.set(fl0.storeddata);
+              concat.set(temp0, fl0.storeddata.length);
+              fl0.storeddata = concat;
+              fl0.step++;
+              if(fl0.step < fl0.count) fl0.action(fl0);
+              else {
+                UnityLoader.Compression.decompress(fl0.storeddata, function(e) {t.complete(e)});
+                downloadwaiter.waitingyet = false;
+                t.parameters.onload();
+              }
+            }
+            xhr0.send();
+          }
+        };
+        var resptext = new TextDecoder("utf-8").decode(r.response);
+        //console.log(resptext);
+        var j1 = resptext.indexOf("=");
+        var j2 = resptext.indexOf(";", j1);
+        floader.count = parseInt(resptext.substring(j1 + 1, j2));
+        floader.step = 0;
+        j1 = j2 + 1;
+        j2 = resptext.indexOf("!", j1);
+        floader.url = resptext.substring(j1, j2);
+        downloadwaiter.waitingyet = true;
+        floader.action(floader);
+        /*while (downloadwaiter.waitingyet) {
+          await downloadwaiter.sleep(downloadwaiter.waittime);
+        }*/
+        /*for(var i0 = 0; i0 < j0; i0++){
+          var xhr0 = new XMLHttpRequest();
+          xhr0.open("GET", url0 + "--" + i0 + ".part.cs");
+          xhr0.responseType = "arraybuffer";
+          xhr0.onload = function () {
+            var temp0 = new Uint8Array(xhr0.response);
+            var concat = new Uint8Array(loadeddata.length + temp0.length);
+            concat.set(loadeddata);
+            concat.set(temp0, loadeddata.length);
+            loadeddata = concat;
+          }
+          t.parameters.onprogress && xhr0.addEventListener("progress", t.parameters.onprogress);
+          t.parameters.onload && xhr0.addEventListener("load", t.parameters.onload);
+          xhr0.send();
+        }
+        UnityLoader.Compression.decompress(loadeddata, function(e) {t.complete(e)});*/
+      }
+      else{
+        UnityLoader.Compression.decompress(ui8a0, function(e) {t.complete(e)});
+        t.parameters.onload();
+      }
+    };
+    //t.parameters.onprogress && r.addEventListener("progress", t.parameters.onprogress);
+    //t.parameters.onload && r.addEventListener("load", t.parameters.onload);
+    downloadwaiter.waitingyet = true;
+    r.send();
+    while (downloadwaiter.waitingyet) {
+      await downloadwaiter.sleep(downloadwaiter.waittime);
+    };
+    console.log("loading finished");
+  },

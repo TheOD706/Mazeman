@@ -1,12 +1,12 @@
 fld = input("Input project folder: ")
 import os, shutil, math, codecs
 
-def oncedir(dir):
+def oncedir(dir, pff):
     flist = os.listdir("..\\Builds\\" + dir)
     for x in flist:
         if (os.path.isdir("..\\Builds\\" + dir + "\\" + x)):
             os.mkdir(os.getcwd() + "\\" + dir + "\\" + x)
-            oncedir(dir + "\\" + x)
+            oncedir(dir + "\\" + x, pff)
         elif(os.path.isfile("..\\Builds\\" + dir + "\\" + x)):
             if (x == "UnityLoader.js"):#add own comands to loader
                 f0 = open("..\\Builds\\" + dir + "\\" + x, "r")
@@ -39,6 +39,8 @@ def oncedir(dir):
                 f2.write(t0)
                 f1 = open("ULappend1.js", "r")
                 f2.write(f1.read())
+                f1 = open("ULappend2.js", "r")
+                f2.write(f1.read())
                 f2.close()
             else:
                 stat0 = os.stat("..\\Builds\\" + dir + "\\" + x)
@@ -56,8 +58,24 @@ def oncedir(dir):
                     f2.write("file are parted=" + str(number_of_files) + ";")
                     f2.close()
                     print("splited file " + dir + "\\" + x)
+                    f0 = open(os.getcwd() + "\\" + pff + "\\splitted.urls", "a")
+                    f0.write(x + ";")
+                    f0.close()
         else:
             print(dir + "\\" + x + " unknown type object")
 
+def doublecopyfromhome(fld, fil):
+    f0 = open("..\\OverBuilds\\" + fil, "r")
+    c0 = f0.read()
+    f0.open("..OverBuilds\\" + fld + "\\" + fil, "w");
+    f0.write(c0);
+    f0.close()
+    f0.open("..Builds\\" + fld + "\\" + fil, "w");
+    f0.write(c0);
+    f0.close()
+
 os.mkdir(os.getcwd() + "\\" + fld)
-oncedir(fld)
+oncedir(fld, fld)
+shutil.copy("..\\OverBuilds\\" + fld + "\\splitted.urls", "..\\Builds\\" + fld + "\\splitted.urls")
+doublecopyfromhome(fld, "index.html")
+doublecopyfromhome(fld, "preloadads.txt")
