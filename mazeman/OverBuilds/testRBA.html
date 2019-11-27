@@ -12,5 +12,11 @@
         document.getElementById("rba").innerHTML = window.prk211;
       }, 350);
     </script>
+    <script id="testui8array" src="testui8array.wasm" charset="utf-8"></script>
+    <script type="text/javascript">
+      var enc = new TextEncoder(); // always utf-8
+      var s0 = UI8A.testui8array();
+      console.log(enc.encode(s0));
+    </script>
   </body>
 </html>

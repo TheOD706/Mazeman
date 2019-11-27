@@ -77,5 +77,4 @@ def doublecopyfromhome(fld, fil):
 os.mkdir(os.getcwd() + "\\" + fld)
 oncedir(fld, fld)
 shutil.copy("..\\OverBuilds\\" + fld + "\\splitted.urls", "..\\Builds\\" + fld + "\\splitted.urls")
-doublecopyfromhome(fld, "index.html")
-doublecopyfromhome(fld, "preloadads.txt")
+doublecopyfromhome(fld, "GAindex.html")

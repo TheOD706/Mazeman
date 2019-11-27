@@ -1,0 +1,2 @@
+python BuildingGA.py
+pause
