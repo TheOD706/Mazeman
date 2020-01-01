@@ -1,2 +1,2 @@
-python testGA8.py
+python testGA.py
 pause

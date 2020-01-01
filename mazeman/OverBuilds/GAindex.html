@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | mazeman</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+    var lp = undefined;
+    function prog(x) {
+      if(lp === undefined) lp = document.getElementById("loadprogress");
+      else lp.innerHTML = x.toFixed(2) + " %";
+      if (x >= 100) {
+        var d0 = document.getElementById("unityContainer");
+        var d1 = document.getElementById("ucads");
+        if (d0 !== undefined && d1 !== undefined) {
+          d0.removeChild(d1);
+        }
+      }
+    }
+
+    function inst() {
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/maze0.json", {
+        onProgress: UnityProgress
+      });
+    }
+    preloading211(inst, prog);
+  </script>
+</head>
+
+<body>
+  <div class="webgl-content">
+    <div id="unityContainer" style="width: 960px; height: 600px"></div>
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+      <div class="title">mazeman<br />
+        <a href="https://www.free-stock-music.com/">music from here</a></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var xhr0 = new XMLHttpRequest();
+    xhr0.open("GET", "preloadads.txt", true);
+    xhr0.onload = function() {
+      var e1 = document.getElementById("unityContainer");
+      if (e1 !== undefined) {
+        var e0 = document.createElement("div");
+        var attr0 = document.createAttribute("id");
+        attr0.value = "ucads";
+        e0.setAttributeNode(attr0);
+        e1.appendChild(e0);
+        var e2 = document.getElementById("ucads");
+        if(e2 !== undefined){
+          e2.style.width = e1.style.width;
+          e2.style.height = e1.style.height;
+          e2.innerHTML = xhr0.responseText;
+        }
+      }
+    }
+    xhr0.send();
+  </script>
+
+</body>
+
+</html>
