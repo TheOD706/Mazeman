@@ -1,5 +1,5 @@
 fld = input("Input project folder: ")
-import os, shutil, math, codecs, gzip
+import os, shutil, math, codecs, Haffman101BaseModif as h101
 
 def oncedir(fld, fld0, fla):
     flist = os.listdir("..\\Builds\\" + fld)
@@ -46,9 +46,7 @@ def oncedir(fld, fld0, fla):
             elif(x in fla):
                 apppath = fld[len(fld0) + 2:] + "\\" + x#original path to file
                 s0 = apppath.replace("\\", "_").replace("/", "_").replace(",", "_").replace(".", "_")  # index value of UI8A
-                f0 = gzip.open("..\\Builds\\" + fld + "\\" + x, "rb")
-                fd0 = f0.read().hex()
-                f0.close()
+                fd0 = h101.decryptdata("..\\Builds\\" + fld + "\\" + x)
                 f0 = open("temporaty0.txt", "a")
                 f0.write("," + s0)
                 f0.close()
@@ -58,12 +56,12 @@ def oncedir(fld, fld0, fla):
                 n0 = math.ceil(len(fd0) / critic_size)
                 for i0 in range(0, n0):
                     f0 = open(fld0 + "\\scripts.html", "a")
-                    f0.write("<script class='overbuildscript' src='" + fld + "\\" + x + "_" + str(i0) + ".js'></script>\n")
+                    f0.write("<script class='overbuildscript' src='" + fld[len(fld0) + 1:] + "\\" + x + "_" + str(i0) + ".js'></script>\n")
                     f0.close()
                     f1 = open(fld + "\\" + x + "_" + str(i0) + ".js", "w")
-                    f1.write("window.UI8A = window.UI8A || {}; window.UI8A." + s0 + "=window.UI8A." + s0 + " || []; window.UI8A." + s0 + "[" + str(i0) + "] = new Uint8Array([0x")
-                    f1.write(",0x".join(fd0[critic_size * i0:critic_size * (i0 + 1):2]))
-                    f1.write("]);")
+                    f1.write("window.UI8A = window.UI8A || {}; window.UI8A." + s0 + "=window.UI8A." + s0 + " || []; window.UI8A." + s0 + "[" + str(i0) + "] = \"")
+                    f1.write(fd0[i0 * critic_size:min(critic_size * (i0 + 1), len(fd0))])
+                    f1.write("\";")
                     f1.close()
                     print(x + " = " + str(i0) + "/" + str(len(fd0) / critic_size))
             else:
@@ -80,10 +78,11 @@ f0 = open("preloadads.txt", "r")
 pla = f0.read()
 f0.close()
 f0 = open(fld + "\\scripts.html", "w");
-f0.write('  <div class="webgl-content">    <div id="unityContainer" style="width: 960px; height: 600px"></div>    <div class="footer">      <div class="webgl-logo"></div>      <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>      <div class="title">mazeman<br />        <a href="https://www.free-stock-music.com/">music from here</a></div>    </div>  </div>\n")')
+f0.write("<script src='Build\\UnityLoader.js'></script>")
+f0.write('  <div class="webgl-content">    <div id="unityContainer" style="width: 960px; height: 600px"></div>    <div class="footer">      <div class="webgl-logo"></div>      <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>      <div class="title">mazeman<br />        <a href="https://www.free-stock-music.com/">music from here</a></div>    </div>  </div>\n')
 f0.write('<script class="overbuildscript"> var e1 = document.getElementById("unityContainer"); if (e1 !== undefined) { var e0 = document.createElement("div"); var attr0 = document.createAttribute("id"); attr0.value = "ucads"; e0.setAttributeNode(attr0); e1.appendChild(e0); var e2 = document.getElementById("ucads"); if(e2 !== undefined){   e2.style.width = e1.style.width;   e2.style.height = e1.style.height;   e2.innerHTML = \'')
-f0.write(pla)
-f0.write('\';} }')
+f0.write(pla.replace("\n", ""))
+f0.write('\';} }</script>\n')
 f0.close()
 oncedir(fld, fld, fla)
 f0 = open(fld + "\\scripts.html", "a")

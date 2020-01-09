@@ -1,1 +1,1 @@
-,uild_maze0_data_unityweb,uild_maze0_wasm,uild_maze0_wasm_framework_unityweb
+,_maze0_wasm

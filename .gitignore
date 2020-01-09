@@ -6,3 +6,4 @@ mazeman/Packages/*
 mazeman/ProjectSettings/*
 mazeman/Builds/*
 mazeman/GAOverBuilds/maze1/*
+*pycache*
