@@ -85,7 +85,8 @@ def crypt2file(ba):#my own chyper algorithm
 
 def decryptdata(ffrom):
     print("read from file")
-    f0 = gzip.open(ffrom, "rb")
+    #f0 = gzip.open(ffrom, "rb")
+    f0 = open(ffrom, "rb")
     cnt = crypt2file(f0.read())
     f0.close()
     return cnt
