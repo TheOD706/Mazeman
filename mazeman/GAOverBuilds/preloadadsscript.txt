@@ -1,0 +1,21 @@
+<script>
+  var xhr0 = new XMLHttpRequest();
+  xhr0.open("GET", "https://gamelocator.000webhostapp.com/AdsMiddlePoint/adinloadscreen.php", true);
+  xhr0.onreadystatechange = function (){
+    if(this.readyState == 4){
+      var res0 = "";
+      if(this.status == 200){
+        var n0 = this.response.search("<!--begin_this_is_html_code_of_ad_in_load_screen_-->");
+        var n1 = this.response.search("<!--end_this_is_html_code_of_ad_in_load_screen_-->");
+        res0 = this.response.substring(n0, n1);
+      }
+      if(res0.length > 0){
+        var e2 = document.getElementById("ucads");
+        if(e2 !== undefined){
+          e2.innerHTML = res0;
+        }
+      }
+     }
+  };
+  xhr0.send();
+</script>

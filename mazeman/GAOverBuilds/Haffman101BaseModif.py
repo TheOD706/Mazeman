@@ -67,6 +67,8 @@ class CH101bm:
             if i0 % 100 == 0:
                 sys.stdout.write("\rprogress: " + str(i0 / n0))
                 sys.stdout.flush()
+        sys.stdout.write("end writing")
+        sys.stdout.flush()
         return cnt
 
 def crypt2file(ba):#my own chyper algorithm

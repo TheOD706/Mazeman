@@ -61,6 +61,11 @@ function parted_decrypt_data(pd, nm) {
       ar0.push(alphabet[pd[0].substr(j0, 1)]);
     }
   }
+  //clear 0 ind
+  pd[0] = null;
+  var sc0 = document.getElementById("_overbuildscript_" + nm + "_0_");
+  if(sc0 != undefined) sc0.parentNode.removeChild(sc0);
+
   //start from 1 becouse for 0 special decrypt - start from some character that mean alphabet
   for(var i0 = 1; i0 < pd.length; i0++){
     j0 = 0;
@@ -89,6 +94,10 @@ function parted_decrypt_data(pd, nm) {
         ar0.push(alphabet[pd[i0].substr(j0, 1)]);
       }
     }
+    //clear curent ind
+    pd[i0] = null;
+    var sc0 = document.getElementById("_overbuildscript_" + nm + "_" + i0 + "_");
+    if(sc0 != undefined) sc0.parentNode.removeChild(sc0);
   }
   return new Uint8Array(ar0);
 }
