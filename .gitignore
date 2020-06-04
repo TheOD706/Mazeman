@@ -7,3 +7,4 @@ mazeman/ProjectSettings/*
 mazeman/Builds/*
 mazeman/GAOverBuilds/maze*
 *pycache*
+*sys.bat

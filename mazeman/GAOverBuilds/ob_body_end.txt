@@ -1,0 +1,27 @@
+<div style="position: absolute;">
+123q
+<button onclick="beginthegame_GAOB()">START</button>
+</div>
+<script>
+  window.GAOBH96 = window.GAOBH96 || {};
+
+  window.GAOBH96.checkandchange = function(c){
+    if(c != undefined){
+      if(c.responseText != undefined){
+        if(c.responseText.startsWith("parted\n")){
+          int j0 = 0;
+          var s0 = c.responseText.split("\n")[1];
+          //c.responseText
+          console.log("check & change");
+        }
+      }
+    }
+  }
+
+  function beginthegame_GAOB(){
+    window.unityInstance = UnityLoader.instantiate("unityContainer", "Build/maze0.json", {onProgress: UnityProgress});
+  }
+</script>
+
+</body>
+</html>

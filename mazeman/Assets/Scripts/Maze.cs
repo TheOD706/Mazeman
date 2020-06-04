@@ -8,14 +8,17 @@ public class Maze : MonoBehaviour
 	bool[][] field;
 	public GameObject spawnObject, targetItem;
 	public Material matWal;
+	public Material[] matGemGroup;
 	public Material[] matSky;
 	public Transform man;
 	public bool inverseMeshTriangles;
 	public Transform ground;
 	public float angularSpeed, diamondClaimed, diamondAll;
 	Vector2 angleHeightViewDiapazone = new Vector2(0, 30), angleHeightViewSpeedAndTarget = new Vector2(0.2f, 20);
+	Vector3 rotateBallAngle = new Vector3(0, 0, 7);
 	KeyStatus keyStatus;
 	public UnityEngine.UI.Text txtLevel, txtDiam;
+	Transform manBall0;
 
 	// Start is called before the first frame update
 	void Start()
@@ -26,6 +29,7 @@ public class Maze : MonoBehaviour
 			q0.material = matSky[Random.Range(0, matSky.Length)];
 		}
 		keyStatus = KeyStatus.ksNone;
+		manBall0 =	man.Find("manBall");
 		level = 1;
 		StartCoroutine(generate_maze(level + 6));
 	}
@@ -35,6 +39,7 @@ public class Maze : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.UpArrow) || keyStatus == KeyStatus.ksGo || keyStatus == KeyStatus.ksGoRight || keyStatus == KeyStatus.ksGoLeft)
 		{
+			manBall0.Rotate(rotateBallAngle, Space.Self);
 			Vector3 prewpos = man.position;
 			man.Translate(man.forward * Time.deltaTime, Space.World);
 			Vector3 newpos = spawnObject.transform.InverseTransformPoint(man.position);
@@ -139,8 +144,7 @@ public class Maze : MonoBehaviour
 			var mf = go0.AddComponent<MeshFilter>();
 			mf.mesh = generate_maze_mesh(field, dimension);
 			var mr = go0.AddComponent<MeshRenderer>();
-			if (matWal != null)
-			{
+			if(matWal != null) {
 				mr.material = matWal;
 				mr.material.SetTextureScale("_MainTex", new Vector2(dimension, dimension * 2));
 			}
@@ -184,6 +188,11 @@ public class Maze : MonoBehaviour
 						GameObject o0 = Instantiate<GameObject>(targetItem, ground);
 						o0.transform.position = spawnObject.transform.TransformPoint( j0 + .5f, 0.25f, j1  + .5f);
 						o0.transform.localScale = Vector3.one * 0.2f;
+						if(matGemGroup.Length > 0){
+							var mr0 = o0.GetComponentInChildren<MeshRenderer>();
+							mr0.material = matGemGroup[Random.Range(0, matGemGroup.Length)];
+							mr0.material.SetTextureScale("_MainTex", new Vector2(dimension, dimension * 2));
+						}
 						diamondAll++;
 					}
 				}
@@ -208,6 +217,11 @@ public class Maze : MonoBehaviour
 						unique.Add(j2);
 						GameObject o0 = Instantiate<GameObject>(targetItem, ground);
 						o0.transform.position = spawnObject.transform.TransformPoint(j0 + .5f, 0.5f, j1 + .5f);
+						if(matGemGroup.Length > 0){
+							var mr0 = o0.GetComponentInChildren<MeshRenderer>();
+							mr0.material = matGemGroup[Random.Range(0, matGemGroup.Length)];
+							mr0.material.SetTextureScale("_MainTex", new Vector2(dimension, dimension * 2));
+						}
 						diamondAll++;
 					}
 				}
@@ -260,7 +274,7 @@ public class Maze : MonoBehaviour
 	Mesh generate_maze_mesh(bool[][] field, int dimension)
 	{
 		//inverseMeshTriangles = dimension % 2 == 1;
-		int vert_dim = 2 * (dimension - 1) * (dimension - 1); 
+		int vert_dim = 2 * (dimension - 1) * (dimension - 1);
 		Vector3[] verts = new Vector3[vert_dim];
 		Vector2[] uv0s = new Vector2[vert_dim];
 		int vind = 0;
