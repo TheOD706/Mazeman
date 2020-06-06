@@ -7,13 +7,15 @@
 
   window.GAOBH96.checkandchange = function(c){
     if(c != undefined){
-      if(c.responseText != undefined){
-        if(c.responseText.startsWith("parted\n")){
-          int j0 = 0;
-          var s0 = c.responseText.split("\n")[1];
-          //c.responseText
-          console.log("check & change");
+      if(c.responseType == "bufferarray"){
+        var d = [112, 97, 114, 116, 101, 100];
+        var j0 = 0;
+        while(j0 < 6 && d[j0] == c.response[j0]) j0++;
+        if(j0 == 6){//Huffman decode here c.response
+          
         }
+        console.log("check & change");
+        return c;
       }
     }
   }

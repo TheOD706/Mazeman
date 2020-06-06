@@ -10,10 +10,12 @@
 # 4th step - code all data in message
 import io
 from collections import deque
+from progress.bar import IncrementalBar
 class Huffman96(object):
     incomeAlphabet = None
-    alphabetLong = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_";
-    alphabetShort = "`abcdefghijklmnopqrstuvwxyz{|}~\t";
+    alphabetLong = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+    alphabetShort = "`abcdefghijklmnopqrstuvwxyz{|}~\t"
+    info = ""
 
     def __init__(self, iA):
         t0 = str(type(iA))
@@ -32,22 +34,45 @@ class Huffman96(object):
         elif t0 == "<class 'bytearray'>":
             for i0 in iA:
                 self.incomeAlphabet.append(int(i0))
+        elif t0 == "<type 'NoneType'>":
+            for i0 in range(256):
+                self.incomeAlphabet.append(i0)
+        elif t0 == "<type 'str'>":
+            for i0 in iA:
+                self.incomeAlphabet.append(ord(i0))
+        elif t0 == "<type 'list'>":
+            incomeAlphabet = iA.copy()
+        elif t0 == "<type 'bytes'>":
+            for i0 in iA:
+                self.incomeAlphabet.append(int(i0))
+        elif t0 == "<type 'bytearray'>":
+            for i0 in iA:
+                self.incomeAlphabet.append(int(i0))
         else:
             print("bad format of income alphabet")
+            print(type(iA))
             incomeAlphabet = None
         pass
 
+    def EncodeWithInfo(self, msg, inf):
+        self.info = inf
+        return self.Encode(msg)
+
     def Encode(self, msg):
         if type(msg) == type(""):
-            msg = bytearray(msg, encoding = 'utf8')
+            b = bytearray()
+            b.extend(map(ord, msg))
+            msg = b
         else:
             msg = bytearray(msg)
         tree0 = []  #tree of Node fill all possible in order of incomeAlphabet
         for i0 in self.incomeAlphabet:
             tree0.append(Node(i0))
         #count all element from message
+        barcode0 = IncrementalBar('Encode ' + self.info, max = len(msg) * 2)
         for i0 in msg:
             tree0[self.incomeAlphabet.index(i0)].inc()
+            barcode0.next()
         #colapse tree
         while len(tree0) > 1:
             last2elem = []
@@ -102,6 +127,7 @@ class Huffman96(object):
         buf0.extend(buf1)
         #same encode message
         for i0 in msg:
+            barcode0.next()
             for i1 in dict0[i0]:
                 buf0.append(i1 == "1")
             while len(buf0) > 6:
@@ -113,7 +139,7 @@ class Huffman96(object):
                         if buf0.popleft():
                             j0 += 1
                         n0 -= 1
-                    res0.write(self.alphabetLong[j0])
+                    res0.write(self.alphabetLong[j0 : j0 + 1])
                 else:
                     n0 = 5
                     j0 = 0
@@ -122,7 +148,8 @@ class Huffman96(object):
                         if buf0.popleft():
                             j0 += 1
                         n0 -= 1
-                    res0.write(self.alphabetShort[j0])
+                    res0.write(self.alphabetShort[j0 : j0 + 1])
+        barcode0.finish()
         buf0.append(True)
         for i0 in range(10):
             buf0.append(False)
@@ -135,7 +162,7 @@ class Huffman96(object):
                     if buf0.popleft():
                         j0 += 1
                     n0 -= 1
-                res0.write(self.alphabetLong[j0])
+                res0.write(self.alphabetLong[j0 : j0 + 1])
             else:
                 n0 = 5
                 j0 = 0
@@ -144,7 +171,7 @@ class Huffman96(object):
                     if buf0.popleft():
                         j0 += 1
                     n0 -= 1
-                res0.write(self.alphabetShort[j0])
+                res0.write(self.alphabetShort[j0 : j0 + 1])
         return res0.getvalue()
 
     def Binarize(self, smb):
