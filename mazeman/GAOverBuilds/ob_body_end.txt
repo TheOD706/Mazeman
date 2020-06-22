@@ -29,10 +29,10 @@
             rsp.set(next0, j0);
             j0 += next0.length;
           }
-          c.response = rsp;
+          console.log("check & change");
+          return rsp;
         }
-        console.log("check & change");
-        return c;
+        return null;
       }
     }
   }

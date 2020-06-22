@@ -11,17 +11,22 @@ def oncedir(fld, fld0, fla):
         elif(os.path.isfile("../Builds/" + fld + "/" + x)):
             if(x == "UnityLoader.js"):#add own comands to loader#"load",function(){         find next ; and put function with param t
                 f0 = open("../Builds/" + fld + "/" + x, "r")
-                s0 = f0.read()
+                t0 = f0.read()
                 f0.close()
-                j0 = s0.find("\"load\",function(){")
-                j0 = s0.find(";", j0) + 1
-                s1 = io.StringIO()
-                s1.write(s0[:j0])
-                s1.write("t=window.GAOBH96.checkandchange(t);")
-                s1.write(s0[j0:])
-                f0 = open(fld + "/" + x, "w")
-                f0.write(s1.getvalue())
-                f0.close()
+                j0 = -1
+                try:
+                    s0 = "function(){UnityLoader.Compression.decompress("
+                    j0 = t0.index(s0)
+                    #j0 += len("function(){")
+                except ValueError:
+                    print("code not found")
+                    j0 = -1
+                if j0 > 0:
+                    f0 = open(fld + "/" + x, "w")
+                    f0.write(t0[:j0 + len("function(){")])
+                    f0.write("var candc96=window.GAOBH96.checkandchange(r);UnityLoader.Compression.decompress((candc96!==null)?candc96:")
+                    f0.write(t0[j0 + len(s0):])
+                    f0.close()
             elif(x in fla):#file format is next:
                 s0 = x.replace("\\", "_").replace("/", "_").replace(",", "_").replace(".", "_")  # index value of GAOBH96
                 f0 = open("../Builds/" + fld + "/" + x, "r")
