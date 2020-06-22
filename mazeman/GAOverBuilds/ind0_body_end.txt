@@ -1,0 +1,19 @@
+''];
+</script>
+</head>
+<body>
+<button onclick="letsstart(this);">START</button>
+<div class="webgl-content">
+<div id="unityContainer" style="width: 600px; height: 375px"></div>
+<div class="footer">
+  <div class="webgl-logo"></div>
+  <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+  <div class="title"><b>mazeman</b><br> <a href="https://www.free-stock-music.com/">music from free-stock-music</a></div>
+</div>
+</div>
+<script>
+ var int0 = window.PartedLoader1327();
+ window.joineddata1327.interval = setInterval(int0, 800);
+</script>
+</body>
+</html>

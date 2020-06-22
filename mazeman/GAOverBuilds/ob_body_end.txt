@@ -12,7 +12,24 @@
         var j0 = 0;
         while(j0 < 6 && d[j0] == c.response[j0]) j0++;
         if(j0 == 6){//Huffman decode here c.response
-          
+          var h96 = new window.Huffman96(undefined);
+          var sa0 = new TextDecoder().decode(new Uint8Array(c.response)).split("\n");
+          var name0 = sa0[1] + "_";
+          var count0 = 0;
+          if(sa0.length >= 4) count0 = parseInt(sa0[3]);
+          var rsp = new Uint8Array(count0);
+          j0 = 0; // index of current position in result array
+          for(var i0 = 0; window.GAOBH96.data[name0 + i0.toString()] !== undefined; i0++){
+            var next0 = h96.Decode(window.GAOBH96.data[name0 + i0.toString()]);
+            if(count0 == 0){
+              var c0 = rsp;
+              rsp = new Uint8Array(c0.length + next0.length);
+              rsp.set(c0);
+            }
+            rsp.set(next0, j0);
+            j0 += next0.length;
+          }
+          c.response = rsp;
         }
         console.log("check & change");
         return c;

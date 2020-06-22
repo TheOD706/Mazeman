@@ -37,13 +37,14 @@ def oncedir(fld, fld0, fla):
                     shutil.copy("../Builds/" + fld + "/" + x, fld + "/" + x)
                     f0.close()
                 else:
+                    fs0 = os.stat("../Builds/" + fld + "/" + x).st_size
                     #write same file that it is parted & id name general
                     f0 = open(fld + "/" + x, "w")
-                    f0.write("parted\n" + s0 + "\n")
+                    f0.write("parted\n" + s0 + "\n" + str(fs0) + "\n")
                     f0.close()
                     #write script src & coding parts of target file
                     part_of_file = 7000000
-                    part_max = math.ceil(os.stat("../Builds/" + fld + "/" + x).st_size / part_of_file)
+                    part_max = math.ceil(fs0 / part_of_file)
                     f1 = open(fld0 + "/scripts.html", "a")
                     j0 = 0 #index of subfiles
                     h96 = Huffman96.Huffman96(None)
